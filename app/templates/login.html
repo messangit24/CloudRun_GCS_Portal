@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Login - NOAA GCS Portal{% endblock %}
+
+{% block content %}
+<div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-slate-100">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+    <!-- Cloud & Data Icon -->
+    <div class="mx-auto w-16 h-16 bg-blue-600/30 border border-blue-400/30 rounded-2xl flex items-center justify-center shadow-inner mb-4 backdrop-blur-sm">
+      <i data-lucide="cloud" class="w-9 h-9 text-blue-400"></i>
+    </div>
+    <h2 class="text-3xl font-extrabold tracking-tight text-white">
+      NOAA GCS Portal
+    </h2>
+    <p class="mt-2 text-sm text-slate-300">
+      Secure Cloud Run Gateway for <span class="font-mono text-xs px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-700/50">gs://{{ bucket_name }}</span>
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-slate-800/80 backdrop-blur-md py-8 px-6 shadow-2xl rounded-2xl sm:px-10 border border-slate-700/60">
+      {% if error %}
+      <div class="mb-5 rounded-lg bg-rose-500/10 border border-rose-500/40 p-4 text-sm text-rose-300 flex items-center space-x-3">
+        <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0 text-rose-400"></i>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+
+      <form class="space-y-5" action="/login" method="POST">
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div>
+          <label for="username" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            Username
+          </label>
+          <div class="mt-1 relative rounded-lg shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </div>
+            <input id="username" name="username" type="text" autocomplete="username" required
+              class="block w-full pl-10 pr-3 py-2.5 bg-slate-900/80 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition"
+              placeholder="Enter portal username">
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            Password
+          </label>
+          <div class="mt-1 relative rounded-lg shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </div>
+            <input id="password" name="password" type="password" autocomplete="current-password" required
+              class="block w-full pl-10 pr-10 py-2.5 bg-slate-900/80 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition"
+              placeholder="••••••••••••">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200 focus:outline-none">
+              <i id="eye-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit"
+            class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-blue-600/30">
+            <span>Sign In to Portal</span>
+            <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6 pt-6 border-t border-slate-700/60 text-center">
+        <div class="inline-flex items-center text-xs text-slate-400 space-x-1.5">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+          <span>Direct Bucket Access • No GCP Account Required</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function togglePasswordVisibility() {
+    const input = document.getElementById('password');
+    const eye = document.getElementById('eye-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      eye.setAttribute('data-lucide', 'eye-off');
+    } else {
+      input.type = 'password';
+      eye.setAttribute('data-lucide', 'eye');
+    }
+    lucide.createIcons();
+  }
+</script>
+{% endblock %}
